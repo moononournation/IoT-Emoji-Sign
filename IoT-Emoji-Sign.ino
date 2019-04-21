@@ -9,6 +9,8 @@
 #define NEOPIXEL_PIN 4
 #define WIDTH 8
 #define HEIGHT 8
+// comment below line for progressive matrix
+#define ZIGZAG_MATRIX
  
 // Library that help you connect your WiFi AP on the air
 #include <WiFiManager.h>
@@ -52,7 +54,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         uint8_t r = payload[i++];
         uint8_t g = payload[i++];
         uint8_t b = payload[i++];
+#ifdef ZIGZAG_MATRIX
         uint16_t p = (y % 2) ? (((y + 1) * 8) - x - 1) : ((y * 8) + x);
+#else
+        uint16_t p = (y * 8) + x;
+#endif
         pixels.setPixelColor(p, pixels.Color(r, g, b));
         //Serial.printf("(%u, %u) [%u] color: %u, %u, %u\n", x, y, p, r, g, b);
       }
